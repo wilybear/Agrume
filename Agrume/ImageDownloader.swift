@@ -8,43 +8,32 @@ import UIKit
 import SDWebImage
 
 final class ImageDownloader {
-
-  static func downloadImage(_ url: URL, completion: @escaping (_ image: UIImage?) -> Void) -> URLSessionDataTask? {
-    let session = URLSession(configuration: newConfiguration())
-    let task = session.dataTask(with: url) { data, _, error in
-      var image: UIImage?
-      defer {
-        DispatchQueue.main.async {
-          completion(image)
-        }
-      }
-      guard let data = data, error == nil else {
-        return
-      }
-      if isAnimatedImage(data) {
-        image = SDAnimatedImage(data: data)
-        } else {
-        image = UIImage(data: data)
-      }
-    }
-    task.resume()
-    return task
-  }
   
-  private static func newConfiguration() -> URLSessionConfiguration {
-    let configuration = URLSessionConfiguration.default
-    if #available(iOS 11.0, *) {
-      configuration.waitsForConnectivity = true
+  static func downloadImage(_ url: URL, completion: @escaping (_ image: UIImage?) -> Void) {
+    let start = Date()
+    
+    SDWebImageManager.shared.loadImage(with: url, options: [.retryFailed, .progressiveLoad, .queryMemoryData, .queryMemoryDataSync, .queryDiskDataSync], progress: nil) { image, data, error , cacheType, bool, url in
+      if let error = error {
+        print("Failed to downloadImage \(error.localizedDescription)")
+      }
+      
+      var finalImage: UIImage?
+      
+      if let data = data, isAnimatedImage(data) {
+        finalImage = SDAnimatedImage(data: data)
+      } else {
+        finalImage = image
+      }
+      print("\(start.timeIntervalSinceNow * -1) seconds elapsed")
+      DispatchQueue.main.async {
+        completion(finalImage)
+      }
     }
-    return configuration
   }
   
   private static func isAnimatedImage(_ data: Data) -> Bool {
-    guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil),
-          let imageType = CGImageSourceGetType(imageSource) else {
-            return false
-          }
-    return UTTypeConformsTo(imageType, kUTTypeGIF)
+    let imageFormat = NSData.sd_imageFormat(forImageData: data)
+    return imageFormat == .GIF || imageFormat == .webP
   }
 
 }

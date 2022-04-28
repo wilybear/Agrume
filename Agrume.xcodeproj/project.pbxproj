@@ -11,13 +11,14 @@
 		94318E541D32612D0096215A /* AgrumeServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94318E531D32612D0096215A /* AgrumeServiceLocator.swift */; };
 		C2158A8428193C2A0059AEA0 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = C2158A8328193C2A0059AEA0 /* SDWebImage */; };
 		C2158A8628193C2A0059AEA0 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2158A8528193C2A0059AEA0 /* SDWebImageMapKit */; };
+		C28864D5281A6384007A925A /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = C28864D4281A6384007A925A /* SDWebImageWebPCoder */; };
 		F224A7392783301200A8F5ED /* AgrumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F224A7362783301200A8F5ED /* AgrumeView.swift */; };
 		F2539BA120F22E7700062C80 /* AgrumeOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2539BA020F22E7700062C80 /* AgrumeOverlayView.swift */; };
 		F2609E23209F047200E0E93D /* AgrumeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2609E22209F047200E0E93D /* AgrumeDataSource.swift */; };
 		F2609E26209F06F800E0E93D /* AgrumeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2609E25209F06F800E0E93D /* AgrumeImage.swift */; };
 		F2609E28209F2BC600E0E93D /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2609E27209F2BC600E0E93D /* Configuration.swift */; };
 		F2609E2A209F2E0200E0E93D /* UIKit+Agrume.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2609E29209F2E0200E0E93D /* UIKit+Agrume.swift */; };
-		F2A51FF41B10E00700924912 /* Agrume.h in Headers */ = {isa = PBXBuildFile; fileRef = F2A51FF31B10E00700924912 /* Agrume.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F2A51FF41B10E00700924912 /* Agrume.h in Headers */ = {isa = PBXBuildFile; fileRef = F2A51FF31B10E00700924912 /* Agrume.h */; platformFilter = maccatalyst; settings = {ATTRIBUTES = (Public, ); }; };
 		F2A51FFA1B10E00700924912 /* Agrume.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2A51FEE1B10E00700924912 /* Agrume.framework */; };
 		F2A5200B1B10E29B00924912 /* Agrume.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A5200A1B10E29B00924912 /* Agrume.swift */; };
 		F2D9598C1B1A108800073772 /* AgrumeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D9598B1B1A108800073772 /* AgrumeCell.swift */; };
@@ -64,6 +65,7 @@
 			files = (
 				C2158A8428193C2A0059AEA0 /* SDWebImage in Frameworks */,
 				C2158A8628193C2A0059AEA0 /* SDWebImageMapKit in Frameworks */,
+				C28864D5281A6384007A925A /* SDWebImageWebPCoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,6 +186,7 @@
 			packageProductDependencies = (
 				C2158A8328193C2A0059AEA0 /* SDWebImage */,
 				C2158A8528193C2A0059AEA0 /* SDWebImageMapKit */,
+				C28864D4281A6384007A925A /* SDWebImageWebPCoder */,
 			);
 			productName = Agrume;
 			productReference = F2A51FEE1B10E00700924912 /* Agrume.framework */;
@@ -239,6 +242,7 @@
 			mainGroup = F2A51FE41B10E00700924912;
 			packageReferences = (
 				C2158A8228193C2A0059AEA0 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				C28864D3281A6384007A925A /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
 			);
 			productRefGroup = F2A51FEF1B10E00700924912 /* Products */;
 			projectDirPath = "";
@@ -568,6 +572,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		C28864D3281A6384007A925A /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageWebPCoder";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.8.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -580,6 +592,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C2158A8228193C2A0059AEA0 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
+		};
+		C28864D4281A6384007A925A /* SDWebImageWebPCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C28864D3281A6384007A925A /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */;
+			productName = SDWebImageWebPCoder;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

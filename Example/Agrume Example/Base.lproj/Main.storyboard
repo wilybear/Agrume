@@ -279,6 +279,26 @@
                                             <segue destination="1Uc-SQ-r2I" kind="show" id="lEb-Ot-Br2"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="j4b-Q3-VDH" style="IBUITableViewCellStyleDefault" id="In1-Pq-8ua" userLabel="MultipleUrlTest">
+                                        <rect key="frame" x="0.0" y="616.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="In1-Pq-8ua" id="K0r-jO-mFg">
+                                            <rect key="frame" x="0.0" y="0.0" width="350.5" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="MultipleURLsTest" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="j4b-Q3-VDH">
+                                                    <rect key="frame" x="16" y="0.0" width="326.5" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="l4U-i3-SMI" kind="show" id="tg3-28-Gh2"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -784,6 +804,49 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aG7-WQ-4He" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-642" y="1621"/>
+        </scene>
+        <!--Multiple Urls Example View Controller-->
+        <scene sceneID="HdZ-ZB-M7c">
+            <objects>
+                <viewController id="l4U-i3-SMI" customClass="MultipleUrlsExampleViewController" customModule="Agrume_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="PTW-Yb-o6g"/>
+                        <viewControllerLayoutGuide type="bottom" id="Vo2-Sl-BbE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="saI-gK-brX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mzn-3k-wPp">
+                                <rect key="frame" x="152.5" y="318.5" width="70" height="30"/>
+                                <state key="normal" title="Open URL">
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="openImage:" destination="l4U-i3-SMI" eventType="touchUpInside" id="6bF-XV-meQ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gjP-FL-qth" userLabel="Clear Cache">
+                                <rect key="frame" x="137" y="372" width="103" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Clear Cache"/>
+                                <connections>
+                                    <action selector="clearCache:" destination="l4U-i3-SMI" eventType="touchUpInside" id="W1y-zQ-0GY"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="mzn-3k-wPp" secondAttribute="centerY" id="0Wh-mG-XBH"/>
+                            <constraint firstAttribute="centerX" secondItem="mzn-3k-wPp" secondAttribute="centerX" id="dZg-bb-rV7"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="jpC-oH-rf3"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="03i-fY-55F" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-476" y="90"/>
         </scene>
     </scenes>
     <resources>
