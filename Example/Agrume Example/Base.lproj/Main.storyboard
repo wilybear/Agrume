@@ -817,29 +817,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mzn-3k-wPp">
-                                <rect key="frame" x="152.5" y="318.5" width="70" height="30"/>
-                                <state key="normal" title="Open URL">
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="openImage:" destination="l4U-i3-SMI" eventType="touchUpInside" id="6bF-XV-meQ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gjP-FL-qth" userLabel="Clear Cache">
-                                <rect key="frame" x="137" y="372" width="103" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Clear Cache"/>
-                                <connections>
-                                    <action selector="clearCache:" destination="l4U-i3-SMI" eventType="touchUpInside" id="W1y-zQ-0GY"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="4ot-OZ-lmh">
+                                <rect key="frame" x="136" y="253.5" width="103" height="160"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mzn-3k-wPp">
+                                        <rect key="frame" x="16.5" y="0.0" width="70" height="30"/>
+                                        <state key="normal" title="Open URL">
+                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="openImage:" destination="l4U-i3-SMI" eventType="touchUpInside" id="6bF-XV-meQ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rZe-Tk-Iax">
+                                        <rect key="frame" x="19" y="43" width="65" height="30"/>
+                                        <state key="normal" title="Open GIF">
+                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="openGif:" destination="l4U-i3-SMI" eventType="touchUpInside" id="Hol-eV-CM2"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dme-l9-Upr">
+                                        <rect key="frame" x="11" y="86" width="81" height="30"/>
+                                        <state key="normal" title="Open Webp">
+                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="openWebp:" destination="l4U-i3-SMI" eventType="touchUpInside" id="YAB-Za-sj6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gjP-FL-qth" userLabel="Clear Cache">
+                                        <rect key="frame" x="0.0" y="129" width="103" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Clear Cache"/>
+                                        <connections>
+                                            <action selector="clearCache:" destination="l4U-i3-SMI" eventType="touchUpInside" id="W1y-zQ-0GY"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="mzn-3k-wPp" secondAttribute="centerY" id="0Wh-mG-XBH"/>
-                            <constraint firstAttribute="centerX" secondItem="mzn-3k-wPp" secondAttribute="centerX" id="dZg-bb-rV7"/>
+                            <constraint firstItem="4ot-OZ-lmh" firstAttribute="centerY" secondItem="saI-gK-brX" secondAttribute="centerY" id="ZCi-UN-5EH"/>
+                            <constraint firstItem="4ot-OZ-lmh" firstAttribute="centerX" secondItem="saI-gK-brX" secondAttribute="centerX" id="ytZ-3f-ICz"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="jpC-oH-rf3"/>

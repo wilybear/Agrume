@@ -3,7 +3,7 @@
 //  Agrume Example
 //
 //  Created by kakao on 2022/04/28.
-//  Copyright © 2022 Schnaub. All rights reserved.
+//  Copyright © 2022 wily.kim. All rights reserved.
 //
 
 import Agrume
@@ -13,12 +13,11 @@ import SDWebImage
 final class MultipleUrlsExampleViewController: UIViewController {
 
   //TODO: SDWebImage 데이터 가져올시에 .sync async 옵션 물어보기
-  //TODO: SDWebImage는 주소가 같은 URL의 경우 같은 이미지로 인식... 맞나?
-  //TODO: 확대후 사진 바깥으로 드래그시 이벤트 발생하도록 (예시: 확대하고 왼쪽으로 쭉 당기면 넘어가고 위로 당기면 사라지고)
-  //TODO: CollectionView에서 이미지 prefetching 가능한가??? 옆으로 넘길때 미리 로딩 되어 있도록
-  //TODO: OverlayView에 대해서 좀더 알아볼것
+  //TODO: 확대후 사진 바깥으로 드래그시 이벤트 발생하도록 (예시: 확대하고 왼쪽으로 쭉 당기면 넘어가고 위로 당기면 사라지고) -> 옵션으로 해결
   //TODO: Webp가 animated 인지 아닌지??
   //TODO: SDAnimatedImage를 UIImage처럼 사용해도 되나..?
+  //TODO: 왼쪽에서 오른쪽으로 드래그씨 순간이동 수정하기
+  //TODO: 로그에 나오는거 수정하기
   
   
   private let urls = [
@@ -58,18 +57,114 @@ final class MultipleUrlsExampleViewController: UIViewController {
     URL(string: "https://www.gstatic.com/webp/gallery/3.sm.webp"),
     URL(string: "https://www.gstatic.com/webp/gallery/5.webp")
   ]
+  private var testUrls: [URL] = []
   
-  
+  private var agrume: Agrume?
+  private lazy var overlayView: DaumCafeOverlayView = {
+    let overlay = DaumCafeOverlayView()
+    overlay.delegate = self
+    overlay.footerCollectionView.delegate = self
+    overlay.footerCollectionView.dataSource = self
+    return overlay
+  }()
   
   @IBAction private func openImage(_ sender: Any?) {
-    let agrume = Agrume(urls: urls.compactMap {$0}, startIndex: 3, background: .colored(.black))
-  //  let agrume = Agrume(urls: gifUrls.compactMap {$0}, startIndex: 0, background: .colored(.black))
-  //  let agrume = Agrume(urls: webpUrls.compactMap {$0}, startIndex: 0, background: .colored(.black))
-    agrume.show(from: self)
+    testUrls = urls.compactMap {$0}
+    showArgrumeWith(urls: testUrls)
   }
-    @IBAction func clearCache(_ sender: Any) {
-        SDImageCache.shared.clearDisk()
-        SDImageCache.shared.clearMemory()
+  
+  @IBAction func openGif(_ sender: Any) {
+    testUrls = gifUrls.compactMap {$0}
+    showArgrumeWith(urls: testUrls)
+  }
+  
+  @IBAction func openWebp(_ sender: Any) {
+    testUrls = webpUrls.compactMap {$0}
+    showArgrumeWith(urls: testUrls)
+  }
+  
+  private func showArgrumeWith(urls: [URL]) {
+    agrume = Agrume(urls: urls, startIndex: 0, background: .colored(.black), overlayView: overlayView)
+    self.overlayView.navigationBar.topItem?.title = "1 / \(urls.count)"
+    agrume?.tapBehavior = .toggleOverlayVisibility
+    agrume?.allowSwipeWhileZoomed = true
+    agrume?.willScroll = { [weak self] index in
+      guard let `self` = self else { return }
+      self.willScroll(index: index)
     }
+    overlayView.footerCollectionView.reloadData()
+    overlayView.footerCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .centeredHorizontally)
+    agrume?.show(from: self)
+  }
+  
+  private func willScroll(index: Int) {
+    overlayView.footerCollectionView.selectItem(at: IndexPath(item: index, section: 0), animated: true, scrollPosition: .centeredHorizontally)
+    overlayView.navigationBar.topItem?.title = "\(index + 1) / \(self.testUrls.count)"
+  }
+  
+  @IBAction func clearCache(_ sender: Any) {
+    SDImageCache.shared.clearDisk()
+    SDImageCache.shared.clearMemory()
+  }
     
 }
+
+extension MultipleUrlsExampleViewController: DaumCafeOverlayViewDelegate {
+  func closeView(_ overlayView: AgrumeOverlayView) {
+    agrume?.dismiss()
+  }
+  
+  func downloadImage(_ overlayView: AgrumeOverlayView) {
+    guard let index = agrume?.currentIndex else { return }
+    agrume?.image(forIndex: index) { [weak self]  image in
+      guard let image = image else { return }
+      UIImageWriteToSavedPhotosAlbum(image, self, #selector(self?.saveCompleted), nil)
+    }
+  }
+  
+  @objc private func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+    print("Save finished!")
+  }
+}
+
+extension MultipleUrlsExampleViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+    let cell: UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: DaumCafeFooterImageCell.identifier, for: indexPath)
+    if let cell = cell as? DaumCafeFooterImageCell {
+      // 썸네일용 url 사용해야함
+      cell.update(url: testUrls[indexPath.item], isSelected: indexPath.row == agrume?.currentIndex)
+    }
+    return cell
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    testUrls.count
+  }
+  
+  func numberOfSections(in collectionView: UICollectionView) -> Int {
+    1
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    print("Selected Called")
+    agrume?.showImage(atIndex: indexPath.item)
+    self.overlayView.navigationBar.topItem?.title = "\(indexPath.item + 1) / \(self.testUrls.count)"
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+      if let layout = collectionViewLayout as? UICollectionViewFlowLayout {
+          let cellSpacing = layout.minimumLineSpacing
+          let cellWidth = layout.itemSize.width
+          let cellCount = CGFloat(collectionView.numberOfItems(inSection: section))
+          let totalWidth = cellCount * cellWidth
+          let totalSpacing = (cellCount - 1) * cellSpacing
+          var inset = (collectionView.bounds.size.width - totalWidth - totalSpacing) * 0.5
+          inset = max(inset, 10)
+          return UIEdgeInsets.init(top: 10, left: inset, bottom: 10, right: 10)
+      }
+      return UIEdgeInsets.init(top: 10, left: 10, bottom:  10, right: 10)
+  }
+  
+}
+

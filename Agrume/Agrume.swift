@@ -24,12 +24,17 @@ public final class Agrume: UIViewController {
 
   /// The background property. Set through the initialiser for most use cases.
   public var background: Background
+  
+  /// 이미지가 확대되어 있는 상태에서 swipe를 허락할지 여부를 결정하는 프로퍼티
+  public var allowSwipeWhileZoomed: Bool = false
 
   /// The "page" index for the current image
   public private(set) var currentIndex: Int
   
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
 
+  /// 유저가 swipe하는 단계에서 호출되는 Optional closure
+  public var willScroll: ((_ index: Int) -> Void)?
   /// Optional closure to call when user long pressed on an image
   public var onLongPress: ((UIImage?, UIViewController) -> Void)?
   /// Optional closure to call whenever Agrume is about to dismiss.
@@ -472,6 +477,7 @@ extension Agrume: UICollectionViewDataSource {
     let cell: AgrumeCell = collectionView.dequeue(indexPath: indexPath)
 
     cell.tapBehavior = tapBehavior
+    cell.allowSwipeWhileZoomed = allowSwipeWhileZoomed
     switch dismissal {
     case .withPan(let physics), .withPanAndButton(let physics, _):
       cell.panPhysics = physics
@@ -513,14 +519,24 @@ extension Agrume: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     return UIEdgeInsets(top: 0, left: leftRightEdgeInset, bottom: 0, right: leftRightEdgeInset)
   }
 
-  public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+   public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
     didScroll?(currentlyVisibleCellIndex())
   }
   
+  public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    if !decelerate {
+      didScroll?(currentlyVisibleCellIndex())
+    }
+  }
+  
   public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    let previousIndex = currentIndex
     let center = CGPoint(x: scrollView.contentOffset.x + (scrollView.frame.width / 2), y: (scrollView.frame.height / 2))
     if let indexPath = collectionView.indexPathForItem(at: center) {
       currentIndex = indexPath.row
+      if previousIndex != currentIndex {
+          self.willScroll?(self.currentIndex)
+      }
     }
   }
   

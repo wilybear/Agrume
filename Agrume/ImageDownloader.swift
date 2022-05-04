@@ -10,8 +10,6 @@ import SDWebImage
 final class ImageDownloader {
   
   static func downloadImage(_ url: URL, completion: @escaping (_ image: UIImage?) -> Void) {
-    let start = Date()
-    
     SDWebImageManager.shared.loadImage(with: url, options: [.retryFailed, .progressiveLoad, .queryMemoryData, .queryMemoryDataSync, .queryDiskDataSync], progress: nil) { image, data, error , cacheType, bool, url in
       if let error = error {
         print("Failed to downloadImage \(error.localizedDescription)")
@@ -24,7 +22,6 @@ final class ImageDownloader {
       } else {
         finalImage = image
       }
-      print("\(start.timeIntervalSinceNow * -1) seconds elapsed")
       DispatchQueue.main.async {
         completion(finalImage)
       }

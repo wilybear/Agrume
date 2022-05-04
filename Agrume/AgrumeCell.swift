@@ -19,6 +19,8 @@ final class AgrumeCell: UICollectionViewCell {
   var tapBehavior: Agrume.TapBehavior = .dismissIfZoomedOut
   /// Specifies dismissal physics behavior; if `nil` then no physics is used for dismissal.
   var panPhysics: Dismissal.Physics? = .standard
+  
+  var allowSwipeWhileZoomed = false
 
   private lazy var scrollView = with(UIScrollView()) { scrollView in
     scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -136,7 +138,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
         return true
       }
       return abs(velocity.y) > abs(velocity.x)
-    } else if notZoomed, gestureRecognizer as? UISwipeGestureRecognizer != nil {
+    } else if notZoomed || allowSwipeWhileZoomed, gestureRecognizer as? UISwipeGestureRecognizer != nil {
       return false
     }
     return true
