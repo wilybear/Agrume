@@ -3,6 +3,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 public final class Agrume: UIViewController {
 
@@ -195,6 +196,8 @@ public final class Agrume: UIViewController {
       collectionView.isPagingEnabled = true
       collectionView.backgroundColor = .clear
       collectionView.delaysContentTouches = false
+      collectionView.isPrefetchingEnabled = true
+      collectionView.prefetchDataSource = self
       collectionView.showsHorizontalScrollIndicator = false
       if #available(iOS 11.0, *) {
         collectionView.contentInsetAdjustmentBehavior = .never
@@ -451,7 +454,7 @@ extension Agrume: AgrumeDataSource {
     if let handler = downloadHandler, let url = images[index].url {
       handler(url, completion)
     } else if let url = images[index].url {
-      downloadTask = ImageDownloader.downloadImage(url, completion: completion)
+      ImageDownloader.downloadImage(url, completion: completion)
     } else {
       completion(images[index].image)
     }
@@ -478,19 +481,17 @@ extension Agrume: UICollectionViewDataSource {
     case .withPhysics, .withPhysicsAndButton:
       cell.panPhysics = .standard
     }
-
-    spinner.alpha = 1
-    fetchImage(forIndex: indexPath.item) { [weak self] image in
-      cell.index = indexPath.item
-      cell.image = image
-      self?.spinner.alpha = 0
+    
+    fetchImage(forIndex: indexPath.item) { image in
+          cell.index = indexPath.item
+          cell.image = image
     }
     // Only allow panning if horizontal swiping fails. Horizontal swiping is only active for zoomed in images
     collectionView.panGestureRecognizer.require(toFail: cell.swipeGesture)
     cell.delegate = self
     return cell
   }
-
+  
   private func fetchImage(forIndex index: Int, handler: @escaping (UIImage?) -> Void) {
     dataSource?.image(forIndex: index) { image in
       DispatchQueue.main.async {
@@ -498,7 +499,7 @@ extension Agrume: UICollectionViewDataSource {
       }
     }
   }
-
+  
 }
 
 extension Agrume: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -523,6 +524,15 @@ extension Agrume: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     }
   }
   
+}
+
+extension Agrume: UICollectionViewDataSourcePrefetching {
+  public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    SDWebImagePrefetcher.shared.prefetchURLs(images.compactMap { $0.url })
+  }
+  public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+    SDWebImagePrefetcher.shared.cancelPrefetching()
+  }
 }
 
 extension Agrume: AgrumeCellDelegate {
