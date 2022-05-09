@@ -430,9 +430,9 @@ public final class Agrume: UIViewController {
     
     spinner.center = view.center
     
-    if currentIndex != currentlyVisibleCellIndex() {
-      scrollToImage(atIndex: currentIndex)
-    }
+//    if currentIndex != currentlyVisibleCellIndex() {
+//      scrollToImage(atIndex: currentIndex)
+//    }
   }
   
   override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -519,7 +519,7 @@ extension Agrume: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     return UIEdgeInsets(top: 0, left: leftRightEdgeInset, bottom: 0, right: leftRightEdgeInset)
   }
 
-   public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+  public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
     didScroll?(currentlyVisibleCellIndex())
   }
   
@@ -535,7 +535,7 @@ extension Agrume: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     if let indexPath = collectionView.indexPathForItem(at: center) {
       currentIndex = indexPath.row
       if previousIndex != currentIndex {
-          self.willScroll?(self.currentIndex)
+        self.willScroll?(self.currentIndex)
       }
     }
   }

@@ -99,7 +99,7 @@ final class AgrumeCell: UICollectionViewCell {
 
   override func prepareForReuse() {
     super.prepareForReuse()
-
+    print("\(updatingImageOnSameCell) \(#function)")
     if !updatingImageOnSameCell {
       imageView.image = nil
       scrollView.zoomScale = 1

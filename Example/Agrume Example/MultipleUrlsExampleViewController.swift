@@ -20,6 +20,7 @@ final class MultipleUrlsExampleViewController: UIViewController {
   //TODO: 로그에 나오는거 수정하기
   
   
+  /// 일반 이미지 urls
   private let urls = [
     URL(string: "https://picsum.photos/800/900"),
     URL(string: "https://picsum.photos/800/800"),
@@ -37,6 +38,7 @@ final class MultipleUrlsExampleViewController: UIViewController {
     URL(string: "https://picsum.photos/100/100")
   ]
   
+  /// gif 이미지 urls
   private let gifUrls = [
     URL(string: "https://media.giphy.com/media/duzpaTbCUy9Vu/giphy.gif"),
     URL(string: "https://media.giphy.com/media/3ohfFrjeqcGR9XYX4I/giphy.gif"),
@@ -50,6 +52,7 @@ final class MultipleUrlsExampleViewController: UIViewController {
     URL(string: "https://media.giphy.com/media/J336VCs1JC42zGRhjH/giphy.gif")
   ]
   
+  /// webp 이미지 urls, 첫번쨰 webp는 움직이는 이미지
   private let webpUrls = [
     URL(string: "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FAbHhH%2FbtqvWquhKAd%2FIcKEAzO56PfEtaydRQWYG0%2Fimg.webp"),
     URL(string: "https://www.gstatic.com/webp/gallery/1.webp"),
@@ -60,6 +63,7 @@ final class MultipleUrlsExampleViewController: UIViewController {
   private var testUrls: [URL] = []
   
   private var agrume: Agrume?
+  
   private lazy var overlayView: DaumCafeOverlayView = {
     let overlay = DaumCafeOverlayView()
     overlay.delegate = self
@@ -147,8 +151,7 @@ extension MultipleUrlsExampleViewController: UICollectionViewDelegate, UICollect
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    print("Selected Called")
-    agrume?.showImage(atIndex: indexPath.item)
+    agrume?.showImage(atIndex: indexPath.item, animated: false)
     self.overlayView.navigationBar.topItem?.title = "\(indexPath.item + 1) / \(self.testUrls.count)"
   }
   
