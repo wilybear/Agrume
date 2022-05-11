@@ -33,8 +33,8 @@ public final class Agrume: UIViewController {
   
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
 
-  /// 유저가 swipe하는 단계에서 호출되는 Optional closure
-  public var willScroll: ((_ index: Int) -> Void)?
+  /// 유저가 스크롤시 하나의 이미지에서 다음이미지로 넘어갈때 호출되는 Optional closure
+  public var indexChangedDuringScroll: ((_ index: Int) -> Void)?
   /// Optional closure to call when user long pressed on an image
   public var onLongPress: ((UIImage?, UIViewController) -> Void)?
   /// Optional closure to call whenever Agrume is about to dismiss.
@@ -188,7 +188,7 @@ public final class Agrume: UIViewController {
   private var _collectionView: UICollectionView?
   private var collectionView: UICollectionView {
     if _collectionView == nil {
-      let layout = UICollectionViewFlowLayout()
+      let layout = AutoInvalidiateFlowLayout()
       layout.minimumInteritemSpacing = 0
       layout.minimumLineSpacing = 0
       layout.scrollDirection = .horizontal
@@ -425,14 +425,9 @@ public final class Agrume: UIViewController {
   override public func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-    layout.itemSize = view.bounds.size
-    layout.invalidateLayout()
-    
+       layout.itemSize = view.bounds.size
+       layout.invalidateLayout()
     spinner.center = view.center
-    
-//    if currentIndex != currentlyVisibleCellIndex() {
-//      scrollToImage(atIndex: currentIndex)
-//    }
   }
   
   override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -440,10 +435,11 @@ public final class Agrume: UIViewController {
     let rotationHandler: ((UIViewControllerTransitionCoordinatorContext) -> Void) = { _ in
       self.scrollToImage(atIndex: indexToRotate)
       self.collectionView.visibleCells.forEach { cell in
-        (cell as! AgrumeCell).recenterDuringRotation(size: size)
+        guard let cell = cell as? AgrumeCell else { return }
+        cell.recenterDuringRotation(size: size)
       }
     }
-    coordinator.animate(alongsideTransition: rotationHandler, completion: rotationHandler)
+    coordinator.animate(alongsideTransition: rotationHandler, completion: nil)
     super.viewWillTransition(to: size, with: coordinator)
   }
 }
@@ -520,6 +516,10 @@ extension Agrume: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
   }
 
   public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    collectionView.visibleCells.forEach { cell in
+      guard let cell = cell as? AgrumeCell else { return }
+      cell.resetZoom()
+    }
     didScroll?(currentlyVisibleCellIndex())
   }
   
@@ -535,7 +535,7 @@ extension Agrume: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     if let indexPath = collectionView.indexPathForItem(at: center) {
       currentIndex = indexPath.row
       if previousIndex != currentIndex {
-        self.willScroll?(self.currentIndex)
+        self.indexChangedDuringScroll?(self.currentIndex)
       }
     }
   }

@@ -14,10 +14,7 @@ final class MultipleUrlsExampleViewController: UIViewController {
 
   //TODO: SDWebImage 데이터 가져올시에 .sync async 옵션 물어보기
   //TODO: 확대후 사진 바깥으로 드래그시 이벤트 발생하도록 (예시: 확대하고 왼쪽으로 쭉 당기면 넘어가고 위로 당기면 사라지고) -> 옵션으로 해결
-  //TODO: Webp가 animated 인지 아닌지??
   //TODO: SDAnimatedImage를 UIImage처럼 사용해도 되나..?
-  //TODO: 왼쪽에서 오른쪽으로 드래그씨 순간이동 수정하기
-  //TODO: 로그에 나오는거 수정하기
   
   
   /// 일반 이미지 urls
@@ -92,16 +89,16 @@ final class MultipleUrlsExampleViewController: UIViewController {
     self.overlayView.navigationBar.topItem?.title = "1 / \(urls.count)"
     agrume?.tapBehavior = .toggleOverlayVisibility
     agrume?.allowSwipeWhileZoomed = true
-    agrume?.willScroll = { [weak self] index in
+    agrume?.indexChangedDuringScroll = { [weak self] index in
       guard let `self` = self else { return }
-      self.willScroll(index: index)
+      self.indexChangedDuringScroll(index: index)
     }
     overlayView.footerCollectionView.reloadData()
     overlayView.footerCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .centeredHorizontally)
     agrume?.show(from: self)
   }
   
-  private func willScroll(index: Int) {
+  private func indexChangedDuringScroll(index: Int) {
     overlayView.footerCollectionView.selectItem(at: IndexPath(item: index, section: 0), animated: true, scrollPosition: .centeredHorizontally)
     overlayView.navigationBar.topItem?.title = "\(index + 1) / \(self.testUrls.count)"
   }

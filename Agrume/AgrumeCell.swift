@@ -325,6 +325,10 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     animator?.addBehavior(push)
   }
   
+  public func resetZoom() {
+    scrollView.zoomScale = 1
+  }
+  
   private func pushAction() {
     if isImageViewOffscreen {
       animator?.removeAllBehaviors()
@@ -365,6 +369,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
   }
   
   func recenterDuringRotation(size: CGSize) {
+    self.scrollView.zoomScale = 1
     self.recenterImage(size: size)
     self.updateScrollViewAndImageViewForCurrentMetrics()
   }
@@ -373,7 +378,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     imageView.center = CGPoint(x: size.width / 2, y: size.height / 2)
   }
 
-  private func updateScrollViewAndImageViewForCurrentMetrics() {
+  private func updateScrollViewAndImageViewForCurrentMetrics() {    
     scrollView.frame = contentView.frame
     if let image = imageView.image {
       imageView.frame = resizedFrame(forSize: image.size)

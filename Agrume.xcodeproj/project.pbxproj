@@ -11,6 +11,7 @@
 		94318E541D32612D0096215A /* AgrumeServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94318E531D32612D0096215A /* AgrumeServiceLocator.swift */; };
 		C2158A8428193C2A0059AEA0 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = C2158A8328193C2A0059AEA0 /* SDWebImage */; };
 		C2158A8628193C2A0059AEA0 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2158A8528193C2A0059AEA0 /* SDWebImageMapKit */; };
+		C247E13A282A609000500187 /* AutoInvalidiateFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C247E139282A609000500187 /* AutoInvalidiateFlowLayout.swift */; };
 		C28864D5281A6384007A925A /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = C28864D4281A6384007A925A /* SDWebImageWebPCoder */; };
 		F224A7392783301200A8F5ED /* AgrumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F224A7362783301200A8F5ED /* AgrumeView.swift */; };
 		F2539BA120F22E7700062C80 /* AgrumeOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2539BA020F22E7700062C80 /* AgrumeOverlayView.swift */; };
@@ -40,6 +41,7 @@
 /* Begin PBXFileReference section */
 		833C23C923CC800800F689E2 /* AgrumePhotoLibraryHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgrumePhotoLibraryHelper.swift; sourceTree = "<group>"; };
 		94318E531D32612D0096215A /* AgrumeServiceLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgrumeServiceLocator.swift; sourceTree = "<group>"; };
+		C247E139282A609000500187 /* AutoInvalidiateFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoInvalidiateFlowLayout.swift; sourceTree = "<group>"; };
 		F224A7362783301200A8F5ED /* AgrumeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgrumeView.swift; sourceTree = "<group>"; };
 		F2539BA020F22E7700062C80 /* AgrumeOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgrumeOverlayView.swift; sourceTree = "<group>"; };
 		F2609E22209F047200E0E93D /* AgrumeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgrumeDataSource.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				F2A51FF11B10E00700924912 /* Supporting Files */,
 				F2609E29209F2E0200E0E93D /* UIKit+Agrume.swift */,
 				F2F24F9323BB3BBE005AA731 /* With.swift */,
+				C247E139282A609000500187 /* AutoInvalidiateFlowLayout.swift */,
 			);
 			path = Agrume;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				F2609E28209F2BC600E0E93D /* Configuration.swift in Sources */,
 				F2EE29AE209F31B800F281A2 /* Foundation+Agrume.swift in Sources */,
 				833C23CA23CC800800F689E2 /* AgrumePhotoLibraryHelper.swift in Sources */,
+				C247E13A282A609000500187 /* AutoInvalidiateFlowLayout.swift in Sources */,
 				F2F24F9423BB3BBE005AA731 /* With.swift in Sources */,
 				F2DC79D61B170C4B00818A8C /* ImageDownloader.swift in Sources */,
 				F2539BA120F22E7700062C80 /* AgrumeOverlayView.swift in Sources */,
