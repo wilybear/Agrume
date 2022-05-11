@@ -19,14 +19,13 @@ final class AgrumeCell: UICollectionViewCell {
   var tapBehavior: Agrume.TapBehavior = .dismissIfZoomedOut
   /// Specifies dismissal physics behavior; if `nil` then no physics is used for dismissal.
   var panPhysics: Dismissal.Physics? = .standard
-  
-  var allowSwipeWhileZoomed = false
 
   private lazy var scrollView = with(UIScrollView()) { scrollView in
     scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     scrollView.delegate = self
     scrollView.zoomScale = 1
     scrollView.maximumZoomScale = 8
+    scrollView.bounces = false
     scrollView.isScrollEnabled = false
     scrollView.showsHorizontalScrollIndicator = false
     scrollView.showsVerticalScrollIndicator = false
@@ -99,7 +98,6 @@ final class AgrumeCell: UICollectionViewCell {
 
   override func prepareForReuse() {
     super.prepareForReuse()
-    print("\(updatingImageOnSameCell) \(#function)")
     if !updatingImageOnSameCell {
       imageView.image = nil
       scrollView.zoomScale = 1
@@ -138,10 +136,11 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
         return true
       }
       return abs(velocity.y) > abs(velocity.x)
-    } else if notZoomed || allowSwipeWhileZoomed, gestureRecognizer as? UISwipeGestureRecognizer != nil {
-      return false
     }
-    return true
+//    else if notZoomed || allowSwipeWhileZoomed, gestureRecognizer as? UISwipeGestureRecognizer != nil {
+//      return false
+//    }
+    return false
   }
 
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -154,7 +153,6 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
   @objc
   private func doubleTap(_ sender: UITapGestureRecognizer) {
     let point = scrollView.convert(sender.location(in: sender.view), from: sender.view)
-    
     if notZoomed {
       zoom(to: point, scale: .targetZoomForDoubleTap)
     } else {

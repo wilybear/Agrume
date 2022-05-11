@@ -7,7 +7,7 @@ import UIKit
 extension CGFloat {
   static let initialScaleToExpandFrom: CGFloat = 0.6
   static let maxScaleForExpandingOffscreen: CGFloat = 1.25
-  static let targetZoomForDoubleTap: CGFloat = 3
+  static let targetZoomForDoubleTap: CGFloat = 2
   static let minFlickDismissalVelocity: CGFloat = 800
   static let maxFlickDismissalVelocity: CGFloat = -800
   static let highScrollVelocity: CGFloat = 1_600

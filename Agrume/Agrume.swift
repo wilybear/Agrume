@@ -27,9 +27,13 @@ public final class Agrume: UIViewController {
   
   /// 이미지가 확대되어 있는 상태에서 swipe를 허락할지 여부를 결정하는 프로퍼티
   public var allowSwipeWhileZoomed: Bool = false
+  
+  public var cellSpace: CGFloat = 10
 
   /// The "page" index for the current image
   public private(set) var currentIndex: Int
+  
+  public private(set) var previousIndex: Int?
   
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
 
@@ -189,8 +193,8 @@ public final class Agrume: UIViewController {
   private var collectionView: UICollectionView {
     if _collectionView == nil {
       let layout = AutoInvalidiateFlowLayout()
-      layout.minimumInteritemSpacing = 0
-      layout.minimumLineSpacing = 0
+      layout.minimumInteritemSpacing = cellSpace
+      layout.minimumLineSpacing = cellSpace
       layout.scrollDirection = .horizontal
 
       let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
@@ -198,12 +202,13 @@ public final class Agrume: UIViewController {
       collectionView.register(AgrumeCell.self)
       collectionView.dataSource = self
       collectionView.delegate = self
-      collectionView.isPagingEnabled = true
+      collectionView.isPagingEnabled = false
       collectionView.backgroundColor = .clear
       collectionView.delaysContentTouches = false
       collectionView.isPrefetchingEnabled = true
       collectionView.prefetchDataSource = self
       collectionView.showsHorizontalScrollIndicator = false
+      collectionView.decelerationRate = .fast
       if #available(iOS 11.0, *) {
         collectionView.contentInsetAdjustmentBehavior = .never
       }
@@ -473,7 +478,6 @@ extension Agrume: UICollectionViewDataSource {
     let cell: AgrumeCell = collectionView.dequeue(indexPath: indexPath)
 
     cell.tapBehavior = tapBehavior
-    cell.allowSwipeWhileZoomed = allowSwipeWhileZoomed
     switch dismissal {
     case .withPan(let physics), .withPanAndButton(let physics, _):
       cell.panPhysics = physics
@@ -510,15 +514,18 @@ extension Agrume: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
                              insetForSectionAt section: Int) -> UIEdgeInsets {
     // Center cells horizontally
     let cellWidth = view.bounds.width
-    let totalWidth = cellWidth * CGFloat(dataSource?.numberOfImages ?? 0)
+    let totalWidth = (cellWidth + cellSpace) * CGFloat(dataSource?.numberOfImages ?? 0)
     let leftRightEdgeInset = max(0, (collectionView.bounds.width - totalWidth) / 2)
     return UIEdgeInsets(top: 0, left: leftRightEdgeInset, bottom: 0, right: leftRightEdgeInset)
   }
 
   public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    collectionView.visibleCells.forEach { cell in
-      guard let cell = cell as? AgrumeCell else { return }
-      cell.resetZoom()
+    if let previousIndex = previousIndex, previousIndex != currentlyVisibleCellIndex() {
+      collectionView.visibleCells.forEach { cell in
+        guard let cell = cell as? AgrumeCell, cell.index == previousIndex else { return }
+        cell.resetZoom()
+      }
+      self.previousIndex = nil
     }
     didScroll?(currentlyVisibleCellIndex())
   }
@@ -535,6 +542,7 @@ extension Agrume: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     if let indexPath = collectionView.indexPathForItem(at: center) {
       currentIndex = indexPath.row
       if previousIndex != currentIndex {
+        self.previousIndex = previousIndex
         self.indexChangedDuringScroll?(self.currentIndex)
       }
     }
