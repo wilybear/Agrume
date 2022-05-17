@@ -28,8 +28,8 @@ final class MultipleUrlsExampleViewController: UIViewController {
     URL(string: "https://picsum.photos/900/900"),
     URL(string: "https://picsum.photos/700/900"),
     URL(string: "https://picsum.photos/600/900"),
-    URL(string: "https://picsum.photos/500/900"),
-    URL(string: "https://picsum.photos/400/900"),
+    URL(string: "https://picsum.photos/300/1100"),
+    URL(string: "https://picsum.photos/300/1000"),
     URL(string: "https://picsum.photos/300/900"),
     URL(string: "https://picsum.photos/200/200"),
     URL(string: "https://picsum.photos/100/100")
@@ -83,12 +83,22 @@ final class MultipleUrlsExampleViewController: UIViewController {
     testUrls = webpUrls.compactMap {$0}
     showArgrumeWith(urls: testUrls)
   }
+    
+    @IBAction func openLogImages(_ sender: Any) {
+      let images = [
+        UIImage(named: "longImage1"),
+        UIImage(named: "longImage2"),
+        UIImage(named: "MapleBacon")
+      ]
+      agrume = Agrume(images: images.compactMap{$0}, startIndex: 0, background: .colored(.black), dismissal: .withPan(.standard), overlayView: nil)
+      agrume?.show(from: self)
+    }
+    
   
   private func showArgrumeWith(urls: [URL]) {
-    agrume = Agrume(urls: urls, startIndex: 0, background: .colored(.black), overlayView: overlayView)
+    agrume = Agrume(urls: urls, startIndex: 0, background: .colored(.white), overlayView: overlayView)
     self.overlayView.navigationBar.topItem?.title = "1 / \(urls.count)"
     agrume?.tapBehavior = .toggleOverlayVisibility
-    agrume?.allowSwipeWhileZoomed = true
     agrume?.indexChangedDuringScroll = { [weak self] index in
       guard let `self` = self else { return }
       self.indexChangedDuringScroll(index: index)
@@ -125,6 +135,7 @@ extension MultipleUrlsExampleViewController: DaumCafeOverlayViewDelegate {
   
   @objc private func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
     print("Save finished!")
+    print(error)
   }
 }
 

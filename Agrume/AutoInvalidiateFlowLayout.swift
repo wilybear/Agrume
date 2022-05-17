@@ -2,8 +2,8 @@
 //  CustomFlowLayout.swift
 //  Agrume
 //
-//  Created by kakao on 2022/05/10.
-//  Copyright © 2022 wily.kim. All rights reserved.
+//  Created by wily.kim on 2022/05/10.
+//  Copyright © 2022 kakao All rights reserved.
 //
 
 import UIKit

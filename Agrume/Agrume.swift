@@ -25,9 +25,7 @@ public final class Agrume: UIViewController {
   /// The background property. Set through the initialiser for most use cases.
   public var background: Background
   
-  /// 이미지가 확대되어 있는 상태에서 swipe를 허락할지 여부를 결정하는 프로퍼티
-  public var allowSwipeWhileZoomed: Bool = false
-  
+  /// 이미지 셀간의 간격 프로퍼티
   public var cellSpace: CGFloat = 10
 
   /// The "page" index for the current image
@@ -127,7 +125,7 @@ public final class Agrume: UIViewController {
   ///   - overlayView: View to overlay the image (does not display with 'button' dismissals)
   public convenience init(urls: [URL], startIndex: Int = 0, background: Background = .colored(.black),
                           dismissal: Dismissal = .withPan(.standard), overlayView: AgrumeOverlayView? = nil) {
-    self.init(images: nil, urls: urls, startIndex: startIndex, background: background, dismissal: dismissal, overlayView: overlayView)
+      self.init(images: nil, urls: urls, startIndex: startIndex, background: background, dismissal: dismissal, overlayView: overlayView)
   }
 
   private init(images: [UIImage]? = nil, urls: [URL]? = nil, dataSource: AgrumeDataSource? = nil, startIndex: Int,
@@ -265,7 +263,6 @@ public final class Agrume: UIViewController {
         $0.title = newTitle
       }
     }
-    
     markAsUpdatingSameCell(at: index)
     images[index] = replacement
     reload()
@@ -430,8 +427,8 @@ public final class Agrume: UIViewController {
   override public func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-       layout.itemSize = view.bounds.size
-       layout.invalidateLayout()
+    layout.itemSize = view.bounds.size
+    layout.invalidateLayout()
     spinner.center = view.center
   }
   
@@ -492,8 +489,6 @@ extension Agrume: UICollectionViewDataSource {
           cell.index = indexPath.item
           cell.image = image
     }
-    // Only allow panning if horizontal swiping fails. Horizontal swiping is only active for zoomed in images
-    collectionView.panGestureRecognizer.require(toFail: cell.swipeGesture)
     cell.delegate = self
     return cell
   }

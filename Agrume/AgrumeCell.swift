@@ -20,12 +20,12 @@ final class AgrumeCell: UICollectionViewCell {
   /// Specifies dismissal physics behavior; if `nil` then no physics is used for dismissal.
   var panPhysics: Dismissal.Physics? = .standard
 
-  private lazy var scrollView = with(UIScrollView()) { scrollView in
+  private lazy var scrollView = with(AgrumeScrollView()) { scrollView in
     scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     scrollView.delegate = self
     scrollView.zoomScale = 1
     scrollView.maximumZoomScale = 8
-    scrollView.bounces = false
+    scrollView.bounces = true
     scrollView.isScrollEnabled = false
     scrollView.showsHorizontalScrollIndicator = false
     scrollView.showsVerticalScrollIndicator = false
@@ -47,7 +47,7 @@ final class AgrumeCell: UICollectionViewCell {
     gesture.maximumNumberOfTouches = 1
     gesture.delegate = self
   }
-
+  
   private var animator: UIDynamicAnimator?
   private var flickedToDismiss = false
   private var isDraggingImage = false
@@ -74,11 +74,6 @@ final class AgrumeCell: UICollectionViewCell {
     }
   }
   weak var delegate: AgrumeCellDelegate?
-
-  private(set) lazy var swipeGesture = with(UISwipeGestureRecognizer(target: self, action: nil)) { gesture in
-    gesture.direction = [.left, .right]
-    gesture.delegate = self
-  }
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -109,7 +104,6 @@ final class AgrumeCell: UICollectionViewCell {
     contentView.addGestureRecognizer(singleTapGesture)
     contentView.addGestureRecognizer(doubleTapGesture)
     scrollView.addGestureRecognizer(panGesture)
-    contentView.addGestureRecognizer(swipeGesture)
   }
 
   func cleanup() {
@@ -137,10 +131,8 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
       }
       return abs(velocity.y) > abs(velocity.x)
     }
-//    else if notZoomed || allowSwipeWhileZoomed, gestureRecognizer as? UISwipeGestureRecognizer != nil {
-//      return false
-//    }
-    return false
+    
+    return true
   }
 
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -154,12 +146,50 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
   private func doubleTap(_ sender: UITapGestureRecognizer) {
     let point = scrollView.convert(sender.location(in: sender.view), from: sender.view)
     if notZoomed {
-      zoom(to: point, scale: .targetZoomForDoubleTap)
+      //zoom(to: point, scale: .targetZoomForDoubleTap)
+      zoomToFitImage(to: point)
     } else {
       zoom(to: .zero, scale: 1)
     }
   }
-  
+  private func zoomToFitImage(to point: CGPoint) {
+    
+    guard let image = imageView.image else { return }
+    
+    let center = imageView.center
+    let convertedCenter = imageView.convert(center, to: self)
+    let scale: CGFloat
+    let translatedZoom: CGPoint
+    let imageHeight = image.size.height * imageView.imageScale.height
+    let imageWidth = image.size.width * imageView.imageScale.width
+
+    if imageWidth >= scrollView.frame.width {
+      scale = scrollView.frame.height / imageHeight
+      translatedZoom = CGPoint(
+        x: (point.x + scrollView.contentOffset.x),
+        y: (convertedCenter.y + scrollView.contentOffset.y)
+      )
+    } else {
+      scale = scrollView.frame.width / imageWidth
+      translatedZoom = CGPoint(
+        x: (convertedCenter.x + scrollView.contentOffset.x),
+        y: (point.y + scrollView.contentOffset.y)
+      )
+    }
+    
+    let width = scrollView.frame.width / scale
+    let height = scrollView.frame.height / scale
+    let destination = CGRect(x: translatedZoom.x - width / 2, y: translatedZoom.y - height / 2, width: width, height: height)
+
+    contentView.isUserInteractionEnabled = false
+    
+    CATransaction.begin()
+    CATransaction.setCompletionBlock { [unowned self] in
+      self.contentView.isUserInteractionEnabled = true
+    }
+    scrollView.zoom(to: destination, animated: true)
+    CATransaction.commit()
+  }
   private func zoom(to point: CGPoint, scale: CGFloat) {
     let factor = 1 / scrollView.zoomScale
     let translatedZoom = CGPoint(
